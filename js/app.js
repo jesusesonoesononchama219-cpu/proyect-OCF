@@ -16,6 +16,7 @@ function applyTranslations() {
   document.querySelectorAll(".lang-group button").forEach(b => {
     b.classList.toggle("active", b.dataset.lang === state.currentLang);
   });
+  translateRoleSelect();
   renderMembers();
   renderIncomeList();
   renderWithdrawals();
@@ -29,6 +30,17 @@ function setLang(lang) {
   state.currentLang = lang;
   localStorage.setItem("ocf_lang", lang);
   applyTranslations();
+}
+
+// El <select> de rol guarda el valor real (Miembro, Presidente…) en `value`,
+// pero el texto visible se traduce según el idioma activo.
+function translateRoleSelect() {
+  const select = document.getElementById("memberRole");
+  if (!select) return;
+  Array.from(select.options).forEach(opt => {
+    opt.textContent = t()["role_" + opt.value] || opt.value;
+  });
+  if (window.fillSaleSellerSelect) fillSaleSellerSelect();
 }
 
 function toggleTheme() {
@@ -323,6 +335,8 @@ function updateMetrics() {
   const totalWithdrawals = state.withdrawals.reduce((s, w) => s + w.amount, 0);
   const savings = totalIncomes - totalWithdrawals;
   document.getElementById("mSavings").textContent = fmtCompact(savings);
+  document.getElementById("heroStatSavings").textContent = fmtMoney(savings);
+  document.getElementById("heroStatMembers").textContent = activeMembers().length;
   document.getElementById("mWithdrawals").textContent = fmtCompact(totalWithdrawals);
   document.getElementById("totalBalance").textContent = fmtCompact(savings);
   document.getElementById("available40").textContent = fmtCompact(savings * 0.4);
@@ -393,13 +407,21 @@ function renderFeed() {
     container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-bullhorn"></i>${escapeHtml(t().noPosts)}</div>`;
     return;
   }
-  container.innerHTML = state.posts.map(p => `
+  container.innerHTML = state.posts.map(p => {
+    const author = p.author || "Admin";
+    const initials = author.slice(0, 2).toUpperCase();
+    return `
     <div class="feed-item">
-      <div class="top"><span>${escapeHtml(p.author || "Admin")}</span><span>${p.date}</span></div>
+      <div class="top">
+        <span class="author-avatar">${escapeHtml(initials)}</span>
+        <span class="author-name">${escapeHtml(author)}</span>
+        <span class="dot">·</span><span>${p.date}</span>
+      </div>
       <h4>${escapeHtml(p.title)}</h4>
-      <p style="font-size:.86rem; color:var(--text-soft);">${escapeHtml(p.content)}</p>
+      <p style="font-size:.86rem;">${escapeHtml(p.content)}</p>
       ${p.imageUrl ? `<img src="${p.imageUrl}" onerror="this.style.display='none'">` : ""}
-    </div>`).join("");
+    </div>`;
+  }).join("");
 }
 
 function openPostModal() {

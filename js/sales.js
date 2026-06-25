@@ -31,7 +31,7 @@ function currentMonthSales() {
 function fillSaleSellerSelect() {
   const select = document.getElementById("saleSeller");
   if (!select) return;
-  select.innerHTML = activeMembers().map(m => `<option value="${m.id}">${escapeHtml(m.name)} — ${escapeHtml(m.role)}</option>`).join("");
+  select.innerHTML = activeMembers().map(m => `<option value="${m.id}">${escapeHtml(m.name)} — ${escapeHtml(t()["role_" + m.role] || m.role)}</option>`).join("");
 }
 
 function fillSalesFilters() {
