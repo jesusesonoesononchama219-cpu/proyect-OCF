@@ -14,7 +14,9 @@ try {
   if (SUPABASE_URL.indexOf("TU-PROYECTO") !== -1 || SUPABASE_ANON_KEY.indexOf("TU-CLAVE") !== -1) {
     throw new Error("Supabase no está configurado todavía: edita js/config.js con tu URL y anon key.");
   }
-  sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: false } // siempre pide usuario y contraseña al abrir la app
+  });
   BACKEND_READY = true;
 } catch (e) {
   console.error("[OCF] Backend no disponible:", e.message);
