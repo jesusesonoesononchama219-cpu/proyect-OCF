@@ -65,7 +65,8 @@ const translations = {
     memberTasks: ["💰 Aportar cuota mensual", "📚 Participar en talleres", "🗳️ Votar en decisiones importantes", "🤝 Recomendar nuevos miembros", "📈 Seguir su progreso financiero"],
     loginTitle: "Bienvenido de nuevo", loginSub: "Inicia sesión para entrar al círculo",
     loginEmail: "Correo electrónico", loginPassword: "Contraseña", loginBtn: "Iniciar sesión",
-    brandTag: "Open Circle of Freedom", brandDesc: "La comunidad donde cada emprendedor construye su libertad financiera, paso a paso y en equipo."
+    brandTag: "Open Circle of Freedom", brandDesc: "La comunidad donde cada emprendedor construye su libertad financiera, paso a paso y en equipo.",
+    juiceSectionTitle: "Nuestros Zumos", juiceSectionSub: "Variedades del círculo OCF"
   },
   en: {
     navDashboard: "Home", navMembers: "Members", navFinances: "Finances",
@@ -130,7 +131,8 @@ const translations = {
     memberTasks: ["💰 Pay monthly fee", "📚 Participate in workshops", "🗳️ Vote on important decisions", "🤝 Recommend new members", "📈 Track your progress"],
     loginTitle: "Welcome back", loginSub: "Sign in to enter the circle",
     loginEmail: "Email", loginPassword: "Password", loginBtn: "Sign in",
-    brandTag: "Open Circle of Freedom", brandDesc: "The community where every entrepreneur builds their financial freedom, step by step, together."
+    brandTag: "Open Circle of Freedom", brandDesc: "The community where every entrepreneur builds their financial freedom, step by step, together.",
+    juiceSectionTitle: "Our Juices", juiceSectionSub: "Varieties from the OCF circle"
   },
   fr: {
     navDashboard: "Accueil", navMembers: "Membres", navFinances: "Finances",
@@ -195,6 +197,7 @@ const translations = {
     memberTasks: ["💰 Payer la cotisation mensuelle", "📚 Participer aux ateliers", "🗳️ Voter sur les décisions importantes", "🤝 Recommander de nouveaux membres", "📈 Suivre votre progression"],
     loginTitle: "Bon retour", loginSub: "Connectez-vous pour entrer dans le cercle",
     loginEmail: "Email", loginPassword: "Mot de passe", loginBtn: "Se connecter",
-    brandTag: "Open Circle of Freedom", brandDesc: "La communauté où chaque entrepreneur construit sa liberté financière, étape par étape, en équipe."
+    brandTag: "Open Circle of Freedom", brandDesc: "La communauté où chaque entrepreneur construit sa liberté financière, étape par étape, en équipe.",
+    juiceSectionTitle: "Nos Jus", juiceSectionSub: "Variétés du cercle OCF"
   }
 };

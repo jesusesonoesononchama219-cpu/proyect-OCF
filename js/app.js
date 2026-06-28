@@ -24,6 +24,8 @@ function applyTranslations() {
   renderChat();
   renderEvents();
   if (window.renderSales) { renderSales(); renderRanking(); }
+  if (window.renderUnionSlider) renderUnionSlider();
+  if (window.renderJuiceVarieties) renderJuiceVarieties();
 }
 
 function setLang(lang) {

@@ -1,51 +1,93 @@
 /* ============================================================
    "EVENTOS Y UNIÓN" — Carrusel hero (Aniversario / fotos de miembros)
    ------------------------------------------------------------
-   ⚠️ Las imágenes de abajo son TEMPORALES (fotos profesionales de
-   stock) mientras llegan las fotos reales de los miembros. Para
-   reemplazarlas, solo cambia el campo `img` de cada slide por la
-   ruta de tu propia foto (ej: "assets/eventos/circulo.jpg").
+   ⚠️ Las imágenes/video de abajo son las fotos reales del 2°
+   aniversario. Para cambiarlas, reemplaza el campo `img`/`video`
+   por tu propio archivo en assets/eventos/.
+   Cada texto tiene 3 versiones (es/en/fr) para que se traduzca
+   automáticamente al cambiar el idioma de la app.
    ============================================================ */
 
 const unionSlides = [
   {
     img: "assets/eventos/aniversario1.jpg",
-    eyebrow: "2° ANIVERSARIO OCF",
-    title: "Familia OCF, brindando con energía",
-    sub: "Nuestros miembros celebrando juntos, Sales Juice en mano. 🧃"
+    eyebrow: { es: "2° ANIVERSARIO OCF", en: "OCF 2ND ANNIVERSARY", fr: "2ᵃ ANNIVERSAIRE OCF" },
+    title: {
+      es: "Familia OCF, brindando con energía",
+      en: "OCF family, toasting with energy",
+      fr: "Famille OCF, célébrant avec énergie"
+    },
+    sub: {
+      es: "Nuestros miembros celebrando juntos, Sales Juice en mano. 🧃",
+      en: "Our members celebrating together, Sales Juice in hand. 🧃",
+      fr: "Nos membres célébrant ensemble, Sales Juice à la main. 🧃"
+    }
   },
   {
     img: "assets/eventos/aniversario2.jpg",
-    eyebrow: "JUNTOS SOMOS MÁS FUERTES",
-    title: "Un círculo, una sola familia",
-    sub: "Cada aniversario es una nueva prueba de que la unión hace la fuerza."
+    eyebrow: { es: "JUNTOS SOMOS MÁS FUERTES", en: "TOGETHER WE ARE STRONGER", fr: "ENSEMBLE NOUS SOMMES PLUS FORTS" },
+    title: {
+      es: "Un círculo, una sola familia",
+      en: "One circle, one family",
+      fr: "Un cercle, une seule famille"
+    },
+    sub: {
+      es: "Cada aniversario es una nueva prueba de que la unión hace la fuerza.",
+      en: "Every anniversary is new proof that unity is strength.",
+      fr: "Chaque anniversaire est une nouvelle preuve que l'union fait la force."
+    }
   },
   {
     video: "assets/eventos/aniversario.mp4",
-    eyebrow: "ASÍ LO VIVIMOS",
-    title: "El aniversario en movimiento",
-    sub: "Revive los mejores momentos de nuestra celebración."
+    eyebrow: { es: "ASÍ LO VIVIMOS", en: "HOW WE LIVED IT", fr: "COMME NOUS L'AVONS VÉCU" },
+    title: {
+      es: "El aniversario en movimiento",
+      en: "The anniversary in motion",
+      fr: "L'anniversaire en mouvement"
+    },
+    sub: {
+      es: "Revive los mejores momentos de nuestra celebración.",
+      en: "Relive the best moments of our celebration.",
+      fr: "Revivez les meilleurs moments de notre célébration."
+    }
   }
 ];
 
 let unionIndex = 0;
 let unionTimer = null;
 
+function pickLang(field) {
+  if (typeof field === "string") return field; // compatibilidad si algún slide trae texto plano
+  return field[state.currentLang] || field.es || "";
+}
+
 function renderUnionSlider() {
   const slidesEl = document.getElementById("unionSlides");
   const dotsEl = document.getElementById("unionDots");
   if (!slidesEl || !dotsEl) return;
   slidesEl.innerHTML = unionSlides.map((s, i) => `
-    <div class="union-slide ${i === 0 ? "active" : ""}" ${s.img ? `style="background-image:url('${s.img}')"` : ""}>
-      ${s.video ? `<video class="union-video" src="${s.video}" autoplay muted loop playsinline></video>` : ""}
+    <div class="union-slide ${i === unionIndex ? "active" : ""}" ${s.img ? `style="background-image:url('${s.img}')"` : ""}>
+      ${s.video ? `
+        <video class="union-video" id="unionVideo${i}" src="${s.video}" autoplay muted loop playsinline></video>
+        <button class="union-mute-btn" onclick="toggleUnionSound(${i}, this)" aria-label="Activar sonido">
+          <i class="fa-solid fa-volume-xmark"></i>
+        </button>` : ""}
       <div class="union-overlay">
-        <span class="union-eyebrow">${escapeHtml(s.eyebrow)}</span>
-        <h2 class="union-title">${escapeHtml(s.title)}</h2>
-        <p class="union-sub">${escapeHtml(s.sub)}</p>
+        <span class="union-eyebrow">${escapeHtml(pickLang(s.eyebrow))}</span>
+        <h2 class="union-title">${escapeHtml(pickLang(s.title))}</h2>
+        <p class="union-sub">${escapeHtml(pickLang(s.sub))}</p>
       </div>
     </div>`).join("");
-  dotsEl.innerHTML = unionSlides.map((_, i) => `<button class="union-dot ${i === 0 ? "active" : ""}" onclick="unionSliderGoTo(${i})"></button>`).join("");
+  dotsEl.innerHTML = unionSlides.map((_, i) => `<button class="union-dot ${i === unionIndex ? "active" : ""}" onclick="unionSliderGoTo(${i})"></button>`).join("");
   startUnionAutoplay();
+}
+
+function toggleUnionSound(i, btn) {
+  const video = document.getElementById("unionVideo" + i);
+  if (!video) return;
+  video.muted = !video.muted;
+  btn.innerHTML = video.muted ? `<i class="fa-solid fa-volume-xmark"></i>` : `<i class="fa-solid fa-volume-high"></i>`;
+  btn.classList.toggle("is-on", !video.muted);
 }
 
 function showUnionSlide(i) {
