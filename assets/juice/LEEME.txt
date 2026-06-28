@@ -1,0 +1,9 @@
+Pon aquí las fotos de cada variedad de jugo.
+
+Luego edita js/juice-varieties.js y cambia cada "img:" por tu archivo,
+por ejemplo:
+
+  img: "assets/juice/naranja.jpg",
+
+Puedes agregar, quitar o editar tantas variedades como quieras
+copiando el mismo formato de bloque { } dentro del arreglo.

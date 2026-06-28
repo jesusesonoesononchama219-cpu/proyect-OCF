@@ -195,6 +195,19 @@ function renderMembers() {
 async function onMemberPhotoFileChange(input) {
   const file = input.files && input.files[0];
   if (!file) return;
+  // Seguridad: solo aceptar imágenes reales (por contenido, no solo por extensión) y limitar el tamaño.
+  const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+  const MAX_SIZE_MB = 8;
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    showToast("Formato no permitido. Usa JPG, PNG, WEBP o GIF.", "error");
+    input.value = "";
+    return;
+  }
+  if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+    showToast(`La imagen es muy pesada (máx. ${MAX_SIZE_MB}MB).`, "error");
+    input.value = "";
+    return;
+  }
   try {
     const dataUrl = await fileToResizedDataUrl(file, 320, 0.82);
     document.getElementById("memberPhotoUrl").value = dataUrl;
@@ -415,11 +428,11 @@ function renderFeed() {
       <div class="top">
         <span class="author-avatar">${escapeHtml(initials)}</span>
         <span class="author-name">${escapeHtml(author)}</span>
-        <span class="dot">·</span><span>${p.date}</span>
+        <span class="dot">·</span><span>${escapeHtml(p.date)}</span>
       </div>
       <h4>${escapeHtml(p.title)}</h4>
       <p style="font-size:.86rem;">${escapeHtml(p.content)}</p>
-      ${p.imageUrl ? `<img src="${p.imageUrl}" onerror="this.style.display='none'">` : ""}
+      ${p.imageUrl ? `<img src="${escapeHtml(p.imageUrl)}" onerror="this.style.display='none'">` : ""}
     </div>`;
   }).join("");
 }
@@ -435,8 +448,14 @@ async function savePost() {
   const title = document.getElementById("postTitle").value.trim();
   const content = document.getElementById("postContent").value.trim();
   if (!title || !content) { showToast(t().postTitle + " / " + t().postContent, "error"); return; }
+  let imageUrl = document.getElementById("postImage").value.trim();
+  // Seguridad: solo aceptar enlaces http(s) reales, nunca esquemas como javascript: o data:text/html.
+  if (imageUrl && !/^https?:\/\//i.test(imageUrl)) {
+    showToast("La imagen debe ser un enlace http(s) válido.", "error");
+    return;
+  }
   sb(await sbClient.from("posts").insert({
-    title, content, image_url: document.getElementById("postImage").value.trim(),
+    title, content, image_url: imageUrl,
     date: new Date().toLocaleDateString(), author: state.currentUserName
   }));
   closeModal("postModal");

@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https://images.unsplash.com https://api.dicebear.com; media-src 'self' blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co;">
 <title>OCF Startup | Open Circle of Freedom</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -254,12 +255,11 @@
 
       <!-- ===================== EVENTS ===================== -->
       <section id="tab-events" class="tab-panel">
-        <div class="section-banner banner-events">
-          <div class="inner">
-            <span class="eyebrow" data-i18n="navEvents">Eventos</span>
-            <h2 data-i18n="eventsTitle">Próximos eventos</h2>
-            <p data-i18n="quickActions">Acciones rápidas</p>
-          </div>
+        <div class="union-slider" id="unionSlider">
+          <div class="union-slides" id="unionSlides"></div>
+          <button class="union-arrow prev" onclick="unionSliderPrev()" aria-label="Anterior"><i class="fa-solid fa-chevron-left"></i></button>
+          <button class="union-arrow next" onclick="unionSliderNext()" aria-label="Siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+          <div class="union-dots" id="unionDots"></div>
         </div>
         <div class="card">
           <div class="card-head">
@@ -331,6 +331,14 @@
         <div class="card" style="margin-top:1.2rem;">
           <div class="card-head"><h3 data-i18n="chartTitle">Evolución de ingresos</h3></div>
           <canvas id="salesChart" height="220"></canvas>
+        </div>
+
+        <div class="card" style="margin-top:1.2rem;">
+          <div class="card-head">
+            <h3>🧃 Nuestros Zumos</h3>
+            <span class="muted">Variedades del círculo OCF</span>
+          </div>
+          <div class="juice-card-track" id="juiceVarietiesTrack"></div>
         </div>
       </section>
 
@@ -444,5 +452,7 @@
 <script src="js/config.js"></script>
 <script src="js/app.js"></script>
 <script src="js/sales.js"></script>
+<script src="js/slider.js"></script>
+<script src="js/juice-varieties.js"></script>
 </body>
 </html>

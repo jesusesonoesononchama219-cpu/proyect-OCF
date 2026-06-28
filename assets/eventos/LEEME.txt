@@ -1,0 +1,12 @@
+Pon aquí tus fotos del carrusel "Eventos y Unión".
+
+Luego edita js/slider.js y cambia cada línea "img:" para que apunte
+a tu archivo, por ejemplo:
+
+  img: "assets/eventos/circulo.jpg",
+
+Nombres sugeridos (puedes usar los que quieras):
+  - circulo.jpg   (miembros unidos en círculo)
+  - brindis.jpg   (brindis con vasos de jugo)
+  - grupal.jpg    (foto grupal, brazos en alto)
+  - risas.jpg     (confraternidad / risas)
