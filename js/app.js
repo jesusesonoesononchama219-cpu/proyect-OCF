@@ -129,7 +129,7 @@ document.getElementById("monthSelector").addEventListener("change", e => {
 
 /* ---------------- Carga de datos ---------------- */
 async function loadAllData() {
-  await Promise.all([loadMembers(), loadIncomes(), loadWithdrawals(), loadPosts(), loadChat(), loadEvents()]);
+  await Promise.all([loadMembers(), loadIncomes(), loadWithdrawals(), loadPosts(), loadChat(), loadEvents(), loadInitialFund()]);
   if (window.loadSales) await loadSales();
   renderMembers();
   renderIncomeList();
@@ -137,6 +137,34 @@ async function loadAllData() {
   updateMetrics();
   updateChart();
   fillBeneficiarySelect();
+  celebrate(60);
+}
+
+async function loadInitialFund() {
+  const data = sb(await sbClient.from("initial_fund").select("*").order("created_at", { ascending: false }));
+  const total = (data || []).reduce((sum, row) => sum + Number(row.amount || 0), 0);
+  state.initialFund = total;
+  const el = document.getElementById("initialFundDisplay");
+  if (el) el.textContent = fmtMoney(total);
+}
+
+function openInitialFundModal() {
+  document.getElementById("initialFundAmount").value = "";
+  document.getElementById("initialFundNote").value = "";
+  openModal("initialFundModal");
+}
+
+async function saveInitialFund() {
+  const amount = parseFloat(document.getElementById("initialFundAmount").value) || 0;
+  if (amount <= 0) { showToast("Introduce un monto válido", "error"); return; }
+  const note = document.getElementById("initialFundNote").value.trim();
+  sb(await sbClient.from("initial_fund").insert({
+    amount, note, registered_by: state.currentUserName
+  }));
+  closeModal("initialFundModal");
+  await loadInitialFund();
+  updateMetrics();
+  showToast(t().save + " ✓ +" + fmtMoney(amount));
   celebrate(60);
 }
 
@@ -165,7 +193,8 @@ async function loadWithdrawals() {
 function rowToMember(row) {
   return {
     id: row.id, name: row.name, role: row.role, phone: row.phone, email: row.email,
-    photoUrl: row.photo_url, fechaSalida: row.fecha_salida, entryDate: row.entry_date
+    photoUrl: row.photo_url, fechaSalida: row.fecha_salida, entryDate: row.entry_date,
+    birthDate: row.birth_date, address: row.address, joinDate: row.join_date
   };
 }
 
@@ -231,6 +260,9 @@ function openMemberModal(id) {
   document.getElementById("memberPhotoFile").value = "";
   document.getElementById("memberPhotoPreview").src = avatarFor(m);
   document.getElementById("memberExitDate").value = m ? (m.fechaSalida || "") : "";
+  document.getElementById("memberBirthDate").value = m ? (m.birthDate || "") : "";
+  document.getElementById("memberAddress").value = m ? (m.address || "") : "";
+  document.getElementById("memberJoinDate").value = m ? (m.joinDate || "") : "";
   openModal("memberModal");
 }
 
@@ -243,7 +275,10 @@ async function saveMember() {
     phone: document.getElementById("memberPhone").value.trim(),
     email: document.getElementById("memberEmail").value.trim(),
     photo_url: document.getElementById("memberPhotoUrl").value.trim(),
-    fecha_salida: document.getElementById("memberExitDate").value || null
+    fecha_salida: document.getElementById("memberExitDate").value || null,
+    birth_date: document.getElementById("memberBirthDate").value.trim(),
+    address: document.getElementById("memberAddress").value.trim(),
+    join_date: document.getElementById("memberJoinDate").value.trim()
   };
   if (state.editMemberId) {
     sb(await sbClient.from("members").update(data).eq("id", state.editMemberId));
@@ -278,17 +313,21 @@ function showMemberProfile(id) {
   const dict = t();
   const tasksKey = { Presidente: "presidentTasks", Tesorero: "treasurerTasks", Secretario: "secretaryTasks", Reclutador: "recruiterTasks" }[m.role] || "memberTasks";
   document.getElementById("profileInfo").innerHTML = `
-    <div style="text-align:center;">
-      <img src="${avatarFor(m)}" style="width:84px;height:84px;border-radius:50%;border:3px solid var(--gold);margin-bottom:.8rem;">
+    <div style="text-align:center; margin-bottom:1rem;">
+      <img src="${avatarFor(m)}" style="width:90px;height:90px;border-radius:50%;border:3px solid var(--gold);margin-bottom:.8rem;object-fit:cover;">
       <h3>${escapeHtml(m.name)}</h3>
-      <span class="badge badge-${m.role}">${escapeHtml(dict["role_" + m.role] || m.role)}</span>
-      <p style="margin-top:.6rem; color:var(--muted); font-size:.85rem;"><i class="fa-solid fa-phone"></i> ${escapeHtml(m.phone || dict.noPhone)}</p>
-      <p style="color:var(--muted); font-size:.85rem;"><i class="fa-solid fa-envelope"></i> ${escapeHtml(m.email || dict.noEmail)}</p>
-      <p style="color:var(--muted); font-size:.85rem;"><i class="fa-solid fa-calendar"></i> ${dict.entrySince}: ${m.entryDate || "—"}</p>
+      <span class="badge badge-${m.role}" style="margin-top:.3rem;">${escapeHtml(dict["role_" + m.role] || m.role)}</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.5rem;font-size:.85rem;">
+      <div style="color:var(--muted);"><i class="fa-solid fa-phone" style="width:16px;"></i> ${escapeHtml(m.phone || dict.noPhone)}</div>
+      <div style="color:var(--muted);"><i class="fa-solid fa-envelope" style="width:16px;"></i> ${escapeHtml(m.email || dict.noEmail)}</div>
+      ${m.birthDate ? `<div style="color:var(--muted);"><i class="fa-solid fa-cake-candles" style="width:16px;"></i> ${escapeHtml(m.birthDate)}</div>` : ""}
+      ${m.address ? `<div style="color:var(--muted);"><i class="fa-solid fa-location-dot" style="width:16px;"></i> ${escapeHtml(m.address)}</div>` : ""}
+      ${m.joinDate ? `<div style="color:var(--muted);"><i class="fa-solid fa-calendar-check" style="width:16px;"></i> ${dict.entrySince}: ${escapeHtml(m.joinDate)}</div>` : `<div style="color:var(--muted);"><i class="fa-solid fa-calendar" style="width:16px;"></i> ${dict.entrySince}: ${m.entryDate || "—"}</div>`}
     </div>`;
   document.getElementById("profileTasks").innerHTML = `
-    <strong><i class="fa-solid fa-list-check"></i> ${dict.tasksFor}</strong>
-    <div style="margin-top:.5rem; display:flex; flex-direction:column; gap:.4rem;">
+    <strong style="display:block;margin-top:1rem;margin-bottom:.5rem;"><i class="fa-solid fa-list-check"></i> ${dict.tasksFor}</strong>
+    <div style="display:flex; flex-direction:column; gap:.4rem;">
       ${(dict[tasksKey] || []).map(task => `<div style="font-size:.85rem;">${task}</div>`).join("")}
     </div>`;
   openModal("profileModal");
@@ -348,7 +387,8 @@ function updateMetrics() {
   let totalIncomes = 0;
   for (const m in state.incomes) totalIncomes += Object.values(state.incomes[m]).reduce((a, b) => a + b, 0);
   const totalWithdrawals = state.withdrawals.reduce((s, w) => s + w.amount, 0);
-  const savings = totalIncomes - totalWithdrawals;
+  const initialFund = state.initialFund || 0;
+  const savings = totalIncomes + initialFund - totalWithdrawals;
   document.getElementById("mSavings").textContent = fmtCompact(savings);
   document.getElementById("heroStatSavings").textContent = fmtMoney(savings);
   document.getElementById("heroStatMembers").textContent = activeMembers().length;

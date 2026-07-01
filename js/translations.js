@@ -66,7 +66,11 @@ const translations = {
     loginTitle: "Bienvenido de nuevo", loginSub: "Inicia sesión para entrar al círculo",
     loginEmail: "Correo electrónico", loginPassword: "Contraseña", loginBtn: "Iniciar sesión",
     brandTag: "Open Circle of Freedom", brandDesc: "La comunidad donde cada emprendedor construye su libertad financiera, paso a paso y en equipo.",
-    juiceSectionTitle: "Nuestros Zumos", juiceSectionSub: "Variedades del círculo OCF"
+    juiceSectionTitle: "Nuestros Zumos", juiceSectionSub: "Variedades del círculo OCF",
+    memberBirthDate: "Fecha de nacimiento", memberAddress: "Dirección", memberJoinDate: "Fecha de adhesión",
+    initialFund: "Fondo inicial registrado", setInitialFund: "Registrar fondo inicial",
+    initialFundAmount: "Monto del fondo inicial (FCFA)", initialFundNote: "Nota (opcional)",
+    initialFundDesc: "Usa esto para registrar dinero que ya existía en el fondo antes de empezar a usar la app. Se sumará al saldo total."
   },
   en: {
     navDashboard: "Home", navMembers: "Members", navFinances: "Finances",
@@ -132,7 +136,11 @@ const translations = {
     loginTitle: "Welcome back", loginSub: "Sign in to enter the circle",
     loginEmail: "Email", loginPassword: "Password", loginBtn: "Sign in",
     brandTag: "Open Circle of Freedom", brandDesc: "The community where every entrepreneur builds their financial freedom, step by step, together.",
-    juiceSectionTitle: "Our Juices", juiceSectionSub: "Varieties from the OCF circle"
+    juiceSectionTitle: "Our Juices", juiceSectionSub: "Varieties from the OCF circle",
+    memberBirthDate: "Date of birth", memberAddress: "Address", memberJoinDate: "Join date",
+    initialFund: "Registered initial fund", setInitialFund: "Register initial fund",
+    initialFundAmount: "Initial fund amount (FCFA)", initialFundNote: "Note (optional)",
+    initialFundDesc: "Use this to register money that already existed in the fund before using the app. It will be added to the total balance."
   },
   fr: {
     navDashboard: "Accueil", navMembers: "Membres", navFinances: "Finances",
@@ -198,6 +206,10 @@ const translations = {
     loginTitle: "Bon retour", loginSub: "Connectez-vous pour entrer dans le cercle",
     loginEmail: "Email", loginPassword: "Mot de passe", loginBtn: "Se connecter",
     brandTag: "Open Circle of Freedom", brandDesc: "La communauté où chaque entrepreneur construit sa liberté financière, étape par étape, en équipe.",
-    juiceSectionTitle: "Nos Jus", juiceSectionSub: "Variétés du cercle OCF"
+    juiceSectionTitle: "Nos Jus", juiceSectionSub: "Variétés du cercle OCF",
+    memberBirthDate: "Date de naissance", memberAddress: "Adresse", memberJoinDate: "Date d'adhésion",
+    initialFund: "Fonds initial enregistré", setInitialFund: "Enregistrer le fonds initial",
+    initialFundAmount: "Montant du fonds initial (FCFA)", initialFundNote: "Note (optionnel)",
+    initialFundDesc: "Utilisez ceci pour enregistrer l'argent qui existait déjà dans le fonds avant d'utiliser l'app. Il sera ajouté au solde total."
   }
 };

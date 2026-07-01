@@ -15,6 +15,9 @@ create table if not exists members (
   photo_url text,
   fecha_salida date,
   entry_date text,
+  birth_date text,
+  address text,
+  join_date text,
   created_at timestamptz default now()
 );
 
@@ -89,6 +92,15 @@ create table if not exists app_config (
   value jsonb not null default '{}'::jsonb
 );
 
+-- ---------------- initial_fund (fondo inicial registrado manualmente) ----------------
+create table if not exists initial_fund (
+  id bigint generated always as identity primary key,
+  amount numeric not null default 0,
+  note text,
+  registered_by text,
+  created_at timestamptz default now()
+);
+
 -- ============================================================
 -- Row Level Security
 -- Cualquier usuario autenticado de la app puede leer/escribir.
@@ -103,11 +115,13 @@ alter table events enable row level security;
 alter table sales enable row level security;
 alter table app_config enable row level security;
 
+alter table initial_fund enable row level security;
+
 do $$
 declare
   t text;
 begin
-  for t in select unnest(array['members','incomes','withdrawals','posts','chat_messages','events','sales','app_config'])
+  for t in select unnest(array['members','incomes','withdrawals','posts','chat_messages','events','sales','app_config','initial_fund'])
   loop
     execute format('drop policy if exists "auth_all_%s" on %I;', t, t);
     execute format(

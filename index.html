@@ -219,6 +219,15 @@
             </div>
             <div class="list" id="withdrawalsList" style="margin-top:1rem;"></div>
             <button class="btn full btn-outline" style="margin-top:.8rem;" onclick="generatePDF()"><i class="fa-solid fa-file-arrow-down"></i> <span data-i18n="downloadReport">Descargar informe PDF</span></button>
+            <div class="breakdown" style="margin-top:.8rem;">
+              <div class="item" style="grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.6rem;">
+                <div>
+                  <div class="v num" id="initialFundDisplay">0 FCFA</div>
+                  <div class="l" data-i18n="initialFund">Fondo inicial registrado</div>
+                </div>
+                <button class="btn btn-sm btn-ghost" onclick="openInitialFundModal()"><i class="fa-solid fa-pen"></i> <span data-i18n="setInitialFund">Registrar fondo inicial</span></button>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -379,6 +388,9 @@
       <div class="field"><label data-i18n="memberEmail">Correo</label><input type="email" id="memberEmail"></div>
     </div>
     <div class="field"><label data-i18n="memberExit">Fecha de salida (opcional)</label><input type="date" id="memberExitDate"></div>
+    <div class="field"><label data-i18n="memberBirthDate">Fecha de nacimiento</label><input type="text" id="memberBirthDate" placeholder="ej: 16 Janvier 2002"></div>
+    <div class="field"><label data-i18n="memberAddress">Dirección</label><input type="text" id="memberAddress" placeholder="ej: Cotonou, Bénin"></div>
+    <div class="field"><label data-i18n="memberJoinDate">Fecha de adhesión</label><input type="text" id="memberJoinDate" placeholder="ej: 03 Avril 2026"></div>
     <button class="btn full" onclick="saveMember()"><span data-i18n="save">Guardar</span></button>
   </div>
 </div>
@@ -443,6 +455,16 @@
     <div class="modal-head"><h3 data-i18n="monthlyGoal">Meta mensual del círculo</h3><button class="modal-close" onclick="closeModal('goalModal')">&times;</button></div>
     <div class="field"><label data-i18n="goalAmount">Monto de la meta</label><input type="number" id="goalAmountInput" min="0"></div>
     <button class="btn full btn-juice" onclick="saveGoal()"><span data-i18n="setGoal">Definir meta</span></button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="initialFundModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3 data-i18n="setInitialFund">Registrar fondo inicial</h3><button class="modal-close" onclick="closeModal('initialFundModal')">&times;</button></div>
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:1rem;" data-i18n="initialFundDesc">Usa esto para registrar dinero que ya existía en el fondo antes de empezar a usar la app. Se sumará automáticamente al saldo total.</p>
+    <div class="field"><label data-i18n="initialFundAmount">Monto del fondo inicial (FCFA)</label><input type="number" id="initialFundAmount" min="0" step="1000"></div>
+    <div class="field"><label data-i18n="initialFundNote">Nota (opcional)</label><input type="text" id="initialFundNote" placeholder="ej: Ahorros acumulados antes de abril 2026"></div>
+    <button class="btn full btn-teal" onclick="saveInitialFund()"><span data-i18n="save">Guardar</span></button>
   </div>
 </div>
 
